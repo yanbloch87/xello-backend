@@ -3,25 +3,18 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    /// <summary>
-    /// Defines the <see cref="GraduationTrackerTests" />
-    /// </summary>
     [TestClass]
     public class GraduationTrackerTests
     {
-        private GraduationTracker tracker = new GraduationTracker();
-        private Diploma diploma = new Diploma()
+        private readonly GraduationTracker tracker = new GraduationTracker();
+        private readonly Diploma diploma = new Diploma()
         {
             Id = 1,
             Credits = 4,
             Requirements = new int[] { 100, 102, 103, 104 }
         };
 
-        /// <summary>
-        /// The TestHasCredits
-        /// </summary>
         [TestMethod]
         public void TestHasCredits()
         {
@@ -88,9 +81,6 @@
             Assert.IsFalse(graduated.Count == students.Length);
         }
 
-        /// <summary>
-        /// The TestHasCredits
-        /// </summary>
         [TestMethod]
         public void TestHasRemedial()
         {
@@ -111,9 +101,6 @@
             Assert.IsTrue(hasRemedial.Item1 == false && hasRemedial.Item2 == STANDING.Remedial);
         }
 
-        /// <summary>
-        /// The TestHasAverage
-        /// </summary>
         [TestMethod]
         public void TestHasAverage()
         {
@@ -134,9 +121,6 @@
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.Average);
         }
 
-        /// <summary>
-        /// The TestHasMagnaCumLaude
-        /// </summary>
         [TestMethod]
         public void TestHasMagnaCumLaude()
         {
@@ -157,9 +141,6 @@
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.MagnaCumLaude);
         }
 
-        /// <summary>
-        /// The TestHasSumaCumLaude
-        /// </summary>
         [TestMethod]
         public void TestHasSumaCumLaude()
         {
@@ -180,9 +161,6 @@
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.SumaCumLaude);
         }
 
-        /// <summary>
-        /// The TestHasSumaCumLaude
-        /// </summary>
         [TestMethod]
         public void TestHasStudent()
         {
@@ -196,9 +174,6 @@
             }
         }
 
-        /// <summary>
-        /// The TestHasSumaCumLaude
-        /// </summary>
         [TestMethod]
         public void TestHasDiploma()
         {

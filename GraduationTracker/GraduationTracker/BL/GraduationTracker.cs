@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraduationTracker
 {
@@ -12,28 +8,22 @@ namespace GraduationTracker
         {
             var credits = 0;
             var sum = 0;
-        
-            for(int i = 0; i < diploma.Requirements.Length; i++)
-            {
-                var requirement = Repository.GetRequirement(diploma.Requirements[i]);
-                for (int j = 0; j < student.Courses.Length; j++)
-                {
-                    for (int k = 0; k < requirement.Courses.Length; k++)
+
+            Array.ForEach(diploma.Requirements, requirementId => {
+                var requirement = Repository.GetRequirement(requirementId);
+
+                Array.ForEach(requirement.Courses, courseId => {
+                    var course = Array.Find(student.Courses, c => c.Id == courseId);
+                    sum += course.Mark;
+                    if (course.Mark > requirement.MinimumMark)
                     {
-                        if (requirement.Courses[k] == student.Courses[j].Id)
-                        {
-                            sum += student.Courses[j].Mark;
-                            if (student.Courses[j].Mark > requirement.MinimumMark)
-                            {
-                                credits += requirement.Credits;
-                            }
-                        }
+                        credits += requirement.Credits;
                     }
-                }
-            }
+                });
+            });
 
             var average = sum / student.Courses.Length;
-            var hasEnoughCreadits = credits == diploma.Credits;
+            var hasEnoughCreadits = credits >= diploma.Credits;
 
             if (average < 50)
                 return new Tuple<bool, STANDING>(hasEnoughCreadits, STANDING.Remedial);
