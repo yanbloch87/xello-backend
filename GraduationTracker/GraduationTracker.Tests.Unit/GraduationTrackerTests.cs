@@ -3,6 +3,9 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
+    using GraduationTracker.BL;
+    using GraduationTracker.DAL;
+    using GraduationTracker.Models;
 
     [TestClass]
     public class GraduationTrackerTests
@@ -168,9 +171,10 @@
             {
                 tracker.HasGraduated(diploma, null);
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 Assert.IsTrue(e != null);
+                Assert.IsTrue(e.Message == "missing student");
             }
         }
 
@@ -192,9 +196,10 @@
             {
                 tracker.HasGraduated(null, student);
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 Assert.IsTrue(e != null);
+                Assert.IsTrue(e.Message == "missing diploma");
             }
         }
     }

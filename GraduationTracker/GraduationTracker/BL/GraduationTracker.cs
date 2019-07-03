@@ -1,10 +1,32 @@
 ﻿using System;
+using GraduationTracker.DAL;
+using GraduationTracker.Models;
 
-namespace GraduationTracker
+namespace GraduationTracker.BL
 {
-    public partial class GraduationTracker
+    public class GraduationTracker
     {   
         public Tuple<bool, STANDING>  HasGraduated(Diploma diploma, Student student)
+        {
+            if (diploma == null)
+            {
+                throw new Exception("missing diploma");
+            }
+            if (student == null)
+            {
+                throw new Exception("missing student");
+            }
+            var creadisAndSum = GetCreditsAndSum(diploma, student);
+            var credits = creadisAndSum.Item1;
+            var sum = creadisAndSum.Item2;
+            var average = sum / student.Courses.Length;
+            var hasEnoughCreadits = credits >= diploma.Credits;
+            var standing = GetStanding(average);
+            var hasGraduated = hasEnoughCreadits && standing != STANDING.Remedial;
+            return new Tuple<bool, STANDING>(hasGraduated, standing);
+        }
+
+        private static Tuple<int, int> GetCreditsAndSum(Diploma diploma, Student student)
         {
             var credits = 0;
             var sum = 0;
@@ -22,17 +44,25 @@ namespace GraduationTracker
                 });
             });
 
-            var average = sum / student.Courses.Length;
-            var hasEnoughCreadits = credits >= diploma.Credits;
+            return new Tuple<int, int>(credits, sum);
+        }
 
+        private static STANDING GetStanding(int average)
+        {
             if (average < 50)
-                return new Tuple<bool, STANDING>(hasEnoughCreadits, STANDING.Remedial);
-            else if (average < 80)
-                return new Tuple<bool, STANDING>(hasEnoughCreadits, STANDING.Average);
-            else if (average < 95)
-                return new Tuple<bool, STANDING>(hasEnoughCreadits, STANDING.MagnaCumLaude);
-            else
-                return new Tuple<bool, STANDING>(hasEnoughCreadits, STANDING.SumaCumLaude);
+            {
+                return STANDING.Remedial;
+            }
+            if (average < 80)
+            {
+                return STANDING.Average;
+            }
+            if (average < 95)
+            {
+                return STANDING.MagnaCumLaude;
+            }
+
+            return STANDING.SumaCumLaude;
         }
     }
 }
