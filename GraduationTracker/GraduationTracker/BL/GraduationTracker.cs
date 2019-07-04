@@ -1,24 +1,33 @@
 ﻿using System;
+using System.Linq;
 using GraduationTracker.DAL;
 using GraduationTracker.Models;
 
 namespace GraduationTracker.BL
 {
-    public class GraduationTracker
-    {   
+    public class GraduationTracker : IGraduationTracker
+    {
+        private readonly IRepository _repository;
+
+        public GraduationTracker(IRepository _repository)
+        {
+            this._repository = _repository;
+        }
+
         public Tuple<bool, STANDING>  HasGraduated(Diploma diploma, Student student)
         {
             if (diploma == null)
             {
-                throw new Exception("missing diploma");
+                throw new ArgumentNullException("missing diploma");
             }
             if (student == null)
             {
-                throw new Exception("missing student");
+                throw new ArgumentNullException("missing student");
             }
-            var creadisAndSum = GetCreditsAndSum(diploma, student);
-            var credits = creadisAndSum.Item1;
-            var sum = creadisAndSum.Item2;
+            var requirements = diploma.Requirements.Select(_repository.GetRequirement).ToArray();
+            var creditsAndSum = GetCreditsAndSum(requirements, student);
+            var credits = creditsAndSum.Item1;
+            var sum = creditsAndSum.Item2;
             var average = sum / student.Courses.Length;
             var hasEnoughCreadits = credits >= diploma.Credits;
             var standing = GetStanding(average);
@@ -26,23 +35,22 @@ namespace GraduationTracker.BL
             return new Tuple<bool, STANDING>(hasGraduated, standing);
         }
 
-        private static Tuple<int, int> GetCreditsAndSum(Diploma diploma, Student student)
+        private static Tuple<int, int> GetCreditsAndSum(Requirement[] requirements, Student student)
         {
             var credits = 0;
             var sum = 0;
 
-            Array.ForEach(diploma.Requirements, requirementId => {
-                var requirement = Repository.GetRequirement(requirementId);
-
-                Array.ForEach(requirement.Courses, courseId => {
-                    var course = Array.Find(student.Courses, c => c.Id == courseId);
+            foreach(var requirement in requirements)
+            {
+                foreach (var courseId in requirement.Courses) {
+                    var course = student.Courses.First(c => c.Id == courseId);
                     sum += course.Mark;
                     if (course.Mark > requirement.MinimumMark)
                     {
                         credits += requirement.Credits;
                     }
-                });
-            });
+                }
+            }
 
             return new Tuple<int, int>(credits, sum);
         }

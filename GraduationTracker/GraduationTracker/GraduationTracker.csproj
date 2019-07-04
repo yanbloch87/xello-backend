@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BL\IGraduationTracker.cs" />
+    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Diploma.cs" />
     <Compile Include="BL\GraduationTracker.cs" />

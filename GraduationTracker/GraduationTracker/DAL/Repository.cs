@@ -1,27 +1,28 @@
 ﻿using GraduationTracker.Models;
+using System.Linq;
 
 namespace GraduationTracker.DAL
 {
     using System;
 
-    public class Repository
+    public class Repository : IRepository
     {
-        public static Student GetStudent(int id)
+        public Student GetStudent(int id)
         {
             var students = GetStudents();
-            return Array.Find(students, s => s.Id == id);
+            return students.First(s => s.Id == id);
         }
 
-        public static Diploma GetDiploma(int id)
+        public Diploma GetDiploma(int id)
         {
             var diplomas = GetDiplomas();
-            return Array.Find(diplomas, d => d.Id == id);
+            return diplomas.First(d => d.Id == id);
         }
 
-        public static Requirement GetRequirement(int id)
+        public Requirement GetRequirement(int id)
         {
             var requirements = GetRequirements();
-            return Array.Find(requirements, r => r.Id == id);
+            return requirements.First(r => r.Id == id);
         }
 
         private static Diploma[] GetDiplomas()

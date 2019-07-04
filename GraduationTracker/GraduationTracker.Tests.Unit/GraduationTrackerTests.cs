@@ -10,7 +10,7 @@
     [TestClass]
     public class GraduationTrackerTests
     {
-        private readonly GraduationTracker tracker = new GraduationTracker();
+        private readonly GraduationTracker tracker = new GraduationTracker(new Repository());
         private readonly Diploma diploma = new Diploma()
         {
             Id = 1,
@@ -22,54 +22,7 @@
         public void TestHasCredits()
         {
 
-            var students = new[]
-            {
-               new Student
-               {
-                   Id = 1,
-                   Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=95 },
-                        new Course{Id = 2, Name = "Science", Mark=95 },
-                        new Course{Id = 3, Name = "Literature", Mark=95 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=95 }
-                   }
-               },
-               new Student
-               {
-                   Id = 2,
-                   Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=80 },
-                        new Course{Id = 2, Name = "Science", Mark=80 },
-                        new Course{Id = 3, Name = "Literature", Mark=80 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=80 }
-                   }
-               },
-                new Student
-                {
-                    Id = 3,
-                    Courses = new Course[]
-                    {
-                        new Course{Id = 1, Name = "Math", Mark=50 },
-                        new Course{Id = 2, Name = "Science", Mark=50 },
-                        new Course{Id = 3, Name = "Literature", Mark=50 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=50 }
-                    }
-                },
-                new Student
-                {
-                    Id = 4,
-                    Courses = new Course[]
-                    {
-                        new Course{Id = 1, Name = "Math", Mark=40 },
-                        new Course{Id = 2, Name = "Science", Mark=40 },
-                        new Course{Id = 3, Name = "Literature", Mark=40 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=40 }
-                    }
-                }
-            };
-
+            var students = GraduationTrackerTestsMock.GetTestHasCreditsStudents();
             var graduated = new List<Tuple<bool, STANDING>>();
 
             foreach (var student in students)
@@ -87,18 +40,7 @@
         [TestMethod]
         public void TestHasRemedial()
         {
-            var student = new Student
-            {
-                Id = 1,
-                Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=49 },
-                        new Course{Id = 2, Name = "Science", Mark=49 },
-                        new Course{Id = 3, Name = "Literature", Mark=49 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=49 }
-                   }
-            };
-
+            var student = GraduationTrackerTestsMock.GetTestHasRemedialStudent();
             var hasRemedial = tracker.HasGraduated(diploma, student);
 
             Assert.IsTrue(hasRemedial.Item1 == false && hasRemedial.Item2 == STANDING.Remedial);
@@ -107,18 +49,7 @@
         [TestMethod]
         public void TestHasAverage()
         {
-            var student = new Student
-            {
-                Id = 1,
-                Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=79 },
-                        new Course{Id = 2, Name = "Science", Mark=79 },
-                        new Course{Id = 3, Name = "Literature", Mark=79 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=79 }
-                   }
-            };
-
+            var student = GraduationTrackerTestsMock.GetTestHasAverageStudent();
             var hasRemedial = tracker.HasGraduated(diploma, student);
 
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.Average);
@@ -127,18 +58,7 @@
         [TestMethod]
         public void TestHasMagnaCumLaude()
         {
-            var student = new Student
-            {
-                Id = 1,
-                Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=94 },
-                        new Course{Id = 2, Name = "Science", Mark=94 },
-                        new Course{Id = 3, Name = "Literature", Mark=94 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=94 }
-                   }
-            };
-
+            var student = GraduationTrackerTestsMock.GetTestHasMagnaCumLaudeStudent();
             var hasRemedial = tracker.HasGraduated(diploma, student);
 
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.MagnaCumLaude);
@@ -147,18 +67,7 @@
         [TestMethod]
         public void TestHasSumaCumLaude()
         {
-            var student = new Student
-            {
-                Id = 1,
-                Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=100 },
-                        new Course{Id = 2, Name = "Science", Mark=100 },
-                        new Course{Id = 3, Name = "Literature", Mark=100 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=100 }
-                   }
-            };
-
+            var student = GraduationTrackerTestsMock.GetTestHasSumaCumLaudeStudent();
             var hasRemedial = tracker.HasGraduated(diploma, student);
 
             Assert.IsTrue(hasRemedial.Item1 == true && hasRemedial.Item2 == STANDING.SumaCumLaude);
@@ -171,35 +80,25 @@
             {
                 tracker.HasGraduated(diploma, null);
             }
-            catch (Exception e)
+            catch (ArgumentNullException e)
             {
                 Assert.IsTrue(e != null);
-                Assert.IsTrue(e.Message == "missing student");
+                Assert.IsTrue(e.ParamName == "missing student");
             }
         }
 
         [TestMethod]
         public void TestHasDiploma()
         {
-            var student = new Student
-            {
-                Id = 1,
-                Courses = new Course[]
-                   {
-                        new Course{Id = 1, Name = "Math", Mark=100 },
-                        new Course{Id = 2, Name = "Science", Mark=100 },
-                        new Course{Id = 3, Name = "Literature", Mark=100 },
-                        new Course{Id = 4, Name = "Physichal Education", Mark=100 }
-                   }
-            };
+            var student = GraduationTrackerTestsMock.GetTestHasSumaCumLaudeStudent();
             try
             {
                 tracker.HasGraduated(null, student);
             }
-            catch (Exception e)
+            catch (ArgumentNullException e)
             {
                 Assert.IsTrue(e != null);
-                Assert.IsTrue(e.Message == "missing diploma");
+                Assert.IsTrue(e.ParamName == "missing diploma");
             }
         }
     }
