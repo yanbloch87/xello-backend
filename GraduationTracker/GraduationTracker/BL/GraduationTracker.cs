@@ -18,11 +18,11 @@ namespace GraduationTracker.BL
         {
             if (diploma == null)
             {
-                throw new ArgumentNullException("missing diploma");
+                throw new ArgumentNullException("missing argument diploma");
             }
             if (student == null)
             {
-                throw new ArgumentNullException("missing student");
+                throw new ArgumentNullException("missing argument student");
             }
             var requirements = diploma.Requirements.Select(_repository.GetRequirement).ToArray();
             var creditsAndSum = GetCreditsAndSum(requirements, student);

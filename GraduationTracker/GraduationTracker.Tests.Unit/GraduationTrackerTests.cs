@@ -74,32 +74,18 @@
         }
 
         [TestMethod]
-        public void TestHasStudent()
+        [ExpectedException(typeof(ArgumentNullException), "missing argument student")]
+        public void TestHasGraduatedNullStudent()
         {
-            try
-            {
-                tracker.HasGraduated(diploma, null);
-            }
-            catch (ArgumentNullException e)
-            {
-                Assert.IsTrue(e != null);
-                Assert.IsTrue(e.ParamName == "missing student");
-            }
+            tracker.HasGraduated(diploma, null);
         }
 
         [TestMethod]
-        public void TestHasDiploma()
+        [ExpectedException(typeof(ArgumentNullException), "missing argument diploma")]
+        public void TestHasGraduatedNullDiploma()
         {
             var student = GraduationTrackerTestsMock.GetTestHasSumaCumLaudeStudent();
-            try
-            {
-                tracker.HasGraduated(null, student);
-            }
-            catch (ArgumentNullException e)
-            {
-                Assert.IsTrue(e != null);
-                Assert.IsTrue(e.ParamName == "missing diploma");
-            }
+            tracker.HasGraduated(null, student);
         }
     }
 }
